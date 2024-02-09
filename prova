@@ -1,0 +1,478 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main(void) {
+
+   srand(time(NULL));
+
+  char cenario[20][20];
+
+  //Preencher cenario com '_' (disponibilidade)
+  for(int i = 0; i < 20; i++)
+  {
+     for(int j = 0; j < 20; j++)
+     {
+       cenario[i][j] = '_';
+     }
+  }
+
+  //Posicionando Sparrow na posição inicial (0x0)
+  int s_l = 0;
+  int s_c = 0;
+
+  cenario[s_l][s_c] = 'S';
+
+  //Posicionando navio na posição (19x19)
+  int n_l = 19;
+  int n_c = 19;
+
+  cenario[n_l][n_c] = 'N';
+
+  //posicionando os piratas (guarda) guardando o navio
+  int g_l = 19; 
+  int g_c = 18; 
+  cenario[g_l][g_c] = '#';
+
+  int g_l_2 = 19; 
+  int g_c_2 = 17; 
+  cenario[g_l_2][g_c_2] = '#';
+
+  int g_l_3 = 19; 
+  int g_c_3 = 16; 
+  cenario[g_l_3][g_c_3] = '#';
+
+  int g_l_4 = 18; 
+  int g_c_4 = 17; 
+  cenario[g_l_4][g_c_4] = '#';
+
+  int g_l_5 = 18; 
+  int g_c_5 = 18; 
+  cenario[g_l_5][g_c_5] = '#';
+
+  int g_l_6 = 18; 
+  int g_c_6 = 19; 
+  cenario[g_l_6][g_c_6] = '#';
+
+  int g_l_7 = 17; 
+  int g_c_7 = 17; 
+  cenario[g_l_7][g_c_7] = '#';
+
+  int g_l_8 = 17; 
+  int g_c_8 = 18; 
+  cenario[g_l_8][g_c_8] = '#';
+
+  int g_l_9 = 17; 
+  int g_c_9 = 19; 
+  cenario[g_l_9][g_c_9] = '#';
+
+  int g_l_10 = 18; 
+  int g_c_10 = 16; 
+  cenario[g_l_10][g_c_10] = '#';
+
+   //posicionando arma na cidade 
+  int a_l = rand()%20;
+  int a_c = rand()%20;
+
+  if(cenario[a_l][a_c] == '_')
+  {
+    cenario[a_l][a_c] = 'A';
+  }
+
+  //Posicionando piratas aleatoriamente
+  for(int p = 1; p <= 50;)
+  {
+    int p_l = rand()%20;
+    int p_c = rand()%20;
+
+    if(cenario[p_l][p_c] == '_')
+    {
+      cenario[p_l][p_c] = '#';
+      p++;
+    }
+  }
+
+  //Posicionando obstaculos aleatoriamente
+  for(int o = 1; o <= 50; )
+    {
+      int o_l = rand()%20;
+      int o_c = rand()%20;
+
+      if(cenario[o_l][o_c] == '_')
+      {
+        cenario[o_l][o_c] = '@';
+        o++;
+      }
+    }
+
+ //posicionando balas aleatoriamente
+  for(int b = 1; b <= 20;)
+  {
+    int b_l = rand()%20;
+    int b_c = rand()%20;
+
+    if(cenario[b_l][b_c] == '_')
+    {
+      cenario[b_l][b_c] = '*';
+      b++;
+    }
+  }
+  int preso = 0;
+  int bala = 0;
+  int arma = 0;
+  int saída =0;
+
+
+   //Jogo
+  do
+  {
+    //imprimir cenario
+    for(int i = 0; i < 20; i++)
+    {
+       for(int j = 0; j < 20; j++)
+       {
+         printf("%c ", cenario[i][j]);
+       }
+      printf("\n");
+    }
+
+    printf("Bala: %i\n\n", bala);
+
+    char movimentacao;
+    printf(": ");
+    scanf("%c", &movimentacao);
+    getchar();
+
+    switch(movimentacao)
+      {
+        case 'w':
+          if(cenario[s_l - 1][s_c] != '@' && (s_l - 1) >= 0)
+          {
+
+             if (cenario [s_l - 1][s_c] == '*')
+             {
+               bala++;
+             }
+            else if (cenario [s_l - 1][s_c] == '#')
+            {
+              if (bala == 0 && arma == 0)
+              {
+                preso = 1;
+              }
+              else 
+              {
+                bala--;
+              }
+            } 
+            if (cenario [s_l - 1][s_c] == 'N') {
+              saída = 1;
+            }
+
+            cenario[s_l][s_c] = '_';
+            s_l--;
+            cenario[s_l][s_c] = 'S';
+          }
+          break;
+
+        case 's':
+          if(cenario[s_l + 1][s_c] != '@' && (s_l + 1) <= 19)
+          {
+
+            if (cenario [s_l + 1][s_c] == '*')
+             {
+               bala++;
+             }
+            else if (cenario [s_l + 1][s_c] == '#')
+            {
+              if (bala == 0 && arma == 0)
+              {
+                preso = 1;
+              }
+              else 
+              {
+                bala--;
+              }
+           }
+            if (cenario [s_l + 1][s_c] == 'N') {
+              saída = 1;
+            }
+
+            cenario[s_l][s_c] = '_';
+            s_l++;
+            cenario[s_l][s_c] = 'S';
+          }
+          break;
+
+        case 'a':
+          if(cenario[s_l][s_c-1] != '@' && (s_c - 1) >= 0)
+          {
+
+            if (cenario [s_l][s_c - 1] == '*')
+             {
+               bala++;
+             }
+            else if (cenario [s_l][s_c - 1] == '#')
+            {
+              if (bala == 0 && arma == 0)
+              {
+                preso = 1;
+              }
+              else 
+              {
+                bala--;
+              }
+            }
+            if (cenario [s_l][s_c - 1] == 'N') {
+              saída = 1;
+            }
+
+            cenario[s_l][s_c] = '_';
+            s_c--;
+            cenario[s_l][s_c] = 'S';
+          }
+          break;
+
+        case 'd':
+          if(cenario[s_l][s_c+1] != '@' && (s_c + 1) <= 19)
+          {
+
+             if (cenario [s_l][s_c + 1] == '*')
+                {
+                  bala++;
+                }
+               else if (cenario [s_l][s_c + 1] == '#')
+               {
+                 if (bala == 0 && arma == 0)
+                 {
+                   preso = 1;
+                 }
+                 else {
+                   bala --;
+                 }
+               } 
+            if (cenario [s_l][s_c + 1] == 'N') {
+               saída = 1;
+             }
+
+            
+            cenario[s_l][s_c] = '_';
+            s_c++;
+            cenario[s_l][s_c] = 'S';
+          }
+          break;
+        default: ;
+
+      }
+  } while(preso != 1 && saída != 1);
+
+ 
+
+  if (preso == 1) {
+    printf("Você foi preso!");
+  }
+  else
+    printf ("Você passou para a próxima fase!\n");
+
+ 
+  
+  
+  
+  system("clear");
+
+  
+  int vez = 0; 
+  int linha, coluna;
+  int coord = 0;
+  int perdeu = 0;
+  int sal_i, sal_j;
+  int venceu = 0;
+  
+  
+  
+  char batalha1[5][5];
+  
+  
+
+
+  //Preencher batalha1 com água '~'
+  for(int i = 0; i < 5; i++)
+  {
+     for(int j = 0; j < 5; j++)
+     {
+       batalha1[i][j] = '~';
+     }
+  }
+
+  
+ 
+  //Posicionando navio de Jack Sparrow aleatoriamente
+  int js = 0;
+  int js_i = rand()%5;
+  int js_j = rand()%5;
+
+  if(batalha1[js_i][js_j] == '~')
+  {
+    batalha1[js_i][js_j] = '$';
+  }
+
+  
+  //Posicionando navio de Salazar aleatoriamente 
+    for(int sal = 1; sal <= 5;)
+     {
+      int sal_i = rand()%5;
+      int sal_j = rand()%5;
+
+       if(batalha1[sal_i][sal_j] == '~' && batalha1[sal_i-1][sal_j-1] == '~' && batalha1[sal_i][sal_j] != '$' && batalha1[sal_i-1][sal_j-1] == '$')
+          {
+            batalha1 [sal_i][sal_j] = '[';
+            batalha1 [sal_i-1][sal_j-1] = ']';
+            sal++;
+          }
+        }
+
+  
+
+do
+  {
+  do
+    {
+      
+      if (vez == 0) 
+      {
+        print (batalha1[js_i][js_j] = '$');
+      }
+        else
+          {
+           print('~');
+          }
+    
+      //imprimindo cenário1
+      for(int i = 0; i < 5; i++)
+      {
+         for(int j = 0; j < 5; j++)
+         {
+           printf("%c ", batalha1[i][j]);
+         }
+        printf("\n");
+      }
+      
+
+      //escolhendo coordenada
+       printf("Escolha uma coordenada para atacar:\n ");
+       printf ("Digite um número entre 0 e 4\n linha:"); 
+       scanf ("%d", &linha);
+
+       printf ("Digite um número entre 0 e 4\n Coluna:");
+       scanf ("%d", &coluna);
+
+      //checando se coordenadas são válidas
+    while (linha < 0 && linha > 4 && coluna < 0 && coluna > 4)
+    {
+       printf("Escolha uma coordenada para atacar:\n ");
+       printf ("Digite um número entre 0 e 4\n linha:"); 
+       scanf ("%d", &linha);
+
+       printf ("Digite um número entre 0 e 4\n Coluna:");
+       scanf ("%d", &coluna);
+    }
+      
+  //checando se coordenada não foi atacada
+      if(batalha1[linha][coluna] == '~')
+      {
+        batalha1[linha][coluna] = 'X';
+        vez = 1;
+      }
+//checando se coordenada é igual a coordenada do proprio navio
+        if(batalha1[linha][coluna] == '$')
+        {
+         batalha1[linha][coluna] = '*';
+         perdeu = 1;
+        }
+
+//checando se coordenada é igual a coordenada do navio de Sal
+        if(batalha1[linha][coluna] == '[' || batalha1[linha][coluna] == ']')
+        {
+          batalha1[linha][coluna] = '*';
+          batalha1[linha][coluna] = '*';
+          //ver se ganhou o jogo
+          ;;venceu = 1;
+        } 
+    
+     } while (vez != 0 && perdeu != 1);
+
+
+
+do
+  {
+
+    if (vez == 0) 
+    {
+      printf (batalha1[sal_i][sal_j] = '[');
+      printf (batalha1[sal_i-1][sal_j-1] = ']');
+    }
+      else
+        {
+         printf ('~');
+        }
+
+    //imprimindo cenário1
+    for(int i = 0; i < 5; i++)
+    {
+       for(int j = 0; j < 5; j++)
+       {
+         printf("%c ", batalha1[i][j]);
+       }
+      printf("\n");
+    }
+
+    //escolhendo coordenada
+     printf("Escolha uma coordenada para atacar:\n ");
+     printf ("Digite um número entre 0 e 4\n linha:"); 
+     scanf ("%d", &linha);
+
+     printf ("Digite um número entre 0 e 4\n Coluna:");
+     scanf ("%d", &coluna);
+
+    //checando se coordenadas são válidas
+  while (linha < 0 && linha > 4 && coluna < 0 && coluna > 4)
+  {
+     printf("Escolha uma coordenada para atacar:\n ");
+     printf ("Digite um número entre 0 e 4\n linha:"); 
+     scanf ("%d", &linha);
+
+     printf ("Digite um número entre 0 e 4\n Coluna:");
+     scanf ("%d", &coluna);
+  }
+
+//checando se coordenada não foi atacada
+    if(batalha1[linha][coluna] == '~')
+    {
+      batalha1[linha][coluna] = 'X';
+      vez = 1;
+    }
+//checando se coordenada é igual a coordenada do navio Jack
+      if(batalha1[linha][coluna] == '$')
+      {
+        batalha1[linha][coluna] = '*';
+        venceu =1;
+      }
+
+//checando se coordenada é igual a coordenada do prop navio
+      if(batalha1[linha][coluna] == '[' || batalha1[linha-1][coluna-1] == ']')
+      {
+        batalha1[linha][coluna] = '*';
+        batalha1[linha-1][coluna-1] = '*';
+        // ver se perdeu o jogo
+        //perdeu = 1;
+      } 
+
+   } while (vez != 0);
+
+} while (perdeu != 1 || venceu != 1);
+
+
+
+
+
+return 0;
+  }
